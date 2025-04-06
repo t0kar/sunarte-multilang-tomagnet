@@ -8,12 +8,6 @@ const nextConfig = {
     // Add any webpack configurations here if needed
     return config;
   },
-
-  // Disable Turbopack for now if it's causing issues
-  experimental: {
-    // Disable Turbopack
-    turbo: false,
-  },
 };
 
 module.exports = nextConfig;

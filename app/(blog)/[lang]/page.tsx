@@ -85,7 +85,11 @@ function HeroPost({
   );
 }
 
-export default async function Page({ params }: any) {
+export default async function Page({
+  params,
+}: {
+  params: { lang: (typeof i18n.languages)[number] };
+}) {
   // Validate language parameter
   if (!i18n.languages.includes(params.lang)) {
     notFound();

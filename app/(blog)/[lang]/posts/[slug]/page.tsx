@@ -23,7 +23,7 @@ import { getTranslation } from '@/config/translations';
 
 type Props = { params: { slug: string; lang: any } };
 
-const postSlugs = defineQuery(
+const postSlugsForStaticParams = defineQuery(
   `*[_type == "post" && defined(slug.current) && defined(language)]{
     "slug": slug.current,
     "lang": language
@@ -32,7 +32,7 @@ const postSlugs = defineQuery(
 
 export async function generateStaticParams() {
   const posts = await sanityFetch({
-    query: postSlugs,
+    query: postSlugsForStaticParams,
     perspective: 'published',
     stega: false,
   });
