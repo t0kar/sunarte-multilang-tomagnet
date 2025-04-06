@@ -33,7 +33,6 @@ export default function CustomPortableText({
   className?: string;
   value: PortableTextBlock[];
 }) {
-  console.log('post', value);
   const components: PortableTextComponents = {
     types: {
       image: ({ value }: { value: SanityImage }) => {

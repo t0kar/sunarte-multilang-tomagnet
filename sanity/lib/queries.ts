@@ -49,3 +49,11 @@ export const postSlugs = defineQuery(`
     "lang": language
   }
 `);
+
+export const redirectsQuery = defineQuery(`
+  *[_type == "redirect" && active == true] {
+    "source": source,
+    "destination": destination,
+    "permanent": permanent
+  }
+`);
