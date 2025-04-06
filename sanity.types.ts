@@ -390,8 +390,243 @@ export type SanityAssistSchemaTypeField = {
 export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Post | Author | Slug | Settings | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./app/(blog)/[lang]/posts/[slug]/page.tsx
-// Variable: postSlugs
+// Variable: postSlugsForStaticParams
 // Query: *[_type == "post" && defined(slug.current) && defined(language)]{    "slug": slug.current,    "lang": language  }
+export type PostSlugsForStaticParamsResult = Array<{
+  slug: string | null;
+  lang: "de" | "en" | "fr" | "hr" | null;
+}>;
+
+// Source: ./sanity/lib/queries.ts
+// Variable: settingsQuery
+// Query: *[_type == "settings"][0]
+export type SettingsQueryResult = {
+  _id: string;
+  _type: "settings";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal";
+    listItem?: never;
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  footer?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    metadataBase?: string;
+    _type: "image";
+  };
+} | null;
+// Variable: heroQueryByLang
+// Query: *[_type == "post" && defined(slug.current) && language == $lang] | order(date desc, _updatedAt desc) [0] {    content,      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  language,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{"name": coalesce(name, "Anonymous"), picture},  "translations": translations[]->{    "title": coalesce(title, "Untitled"),    "slug": slug.current,    language  }  }
+export type HeroQueryByLangResult = {
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  _id: string;
+  status: "draft" | "published";
+  title: string | "Untitled";
+  slug: string | null;
+  language: "de" | "en" | "fr" | "hr" | null;
+  excerpt: string | null;
+  coverImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  date: string;
+  author: {
+    name: string | "Anonymous";
+    picture: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  } | null;
+  translations: Array<{
+    title: string | "Untitled";
+    slug: string | null;
+    language: "de" | "en" | "fr" | "hr" | null;
+  }> | null;
+} | null;
+// Variable: moreStoriesQuery
+// Query: *[_type == "post" && _id != $skip && defined(slug.current) && language == $lang] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  language,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{"name": coalesce(name, "Anonymous"), picture},  "translations": translations[]->{    "title": coalesce(title, "Untitled"),    "slug": slug.current,    language  }  }
+export type MoreStoriesQueryResult = Array<{
+  _id: string;
+  status: "draft" | "published";
+  title: string | "Untitled";
+  slug: string | null;
+  language: "de" | "en" | "fr" | "hr" | null;
+  excerpt: string | null;
+  coverImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  date: string;
+  author: {
+    name: string | "Anonymous";
+    picture: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  } | null;
+  translations: Array<{
+    title: string | "Untitled";
+    slug: string | null;
+    language: "de" | "en" | "fr" | "hr" | null;
+  }> | null;
+}>;
+// Variable: moreStoriesCountQuery
+// Query: count(*[_type == "post" && _id != $skip && defined(slug.current) && language == $lang])
+export type MoreStoriesCountQueryResult = number;
+// Variable: postQuery
+// Query: *[_type == "post" && slug.current == $slug && language == $lang] [0] {    content,      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  language,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{"name": coalesce(name, "Anonymous"), picture},  "translations": translations[]->{    "title": coalesce(title, "Untitled"),    "slug": slug.current,    language  }  }
+export type PostQueryResult = {
+  content: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  _id: string;
+  status: "draft" | "published";
+  title: string | "Untitled";
+  slug: string | null;
+  language: "de" | "en" | "fr" | "hr" | null;
+  excerpt: string | null;
+  coverImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  date: string;
+  author: {
+    name: string | "Anonymous";
+    picture: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt?: string;
+      _type: "image";
+    } | null;
+  } | null;
+  translations: Array<{
+    title: string | "Untitled";
+    slug: string | null;
+    language: "de" | "en" | "fr" | "hr" | null;
+  }> | null;
+} | null;
+// Variable: postSlugs
+// Query: *[_type == "post" && defined(slug.current) && defined(language)] {    "slug": slug.current,    "lang": language  }
 export type PostSlugsResult = Array<{
   slug: string | null;
   lang: "de" | "en" | "fr" | "hr" | null;
@@ -401,6 +636,12 @@ export type PostSlugsResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"post\" && defined(slug.current) && defined(language)]{\n    \"slug\": slug.current,\n    \"lang\": language\n  }": PostSlugsResult;
+    "*[_type == \"post\" && defined(slug.current) && defined(language)]{\n    \"slug\": slug.current,\n    \"lang\": language\n  }": PostSlugsForStaticParamsResult;
+    "*[_type == \"settings\"][0]": SettingsQueryResult;
+    "\n  *[_type == \"post\" && defined(slug.current) && language == $lang] | order(date desc, _updatedAt desc) [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  language,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n  \"translations\": translations[]->{\n    \"title\": coalesce(title, \"Untitled\"),\n    \"slug\": slug.current,\n    language\n  }\n\n  }\n": HeroQueryByLangResult;
+    "\n  *[_type == \"post\" && _id != $skip && defined(slug.current) && language == $lang] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  language,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n  \"translations\": translations[]->{\n    \"title\": coalesce(title, \"Untitled\"),\n    \"slug\": slug.current,\n    language\n  }\n\n  }\n": MoreStoriesQueryResult;
+    "\n  count(*[_type == \"post\" && _id != $skip && defined(slug.current) && language == $lang])\n": MoreStoriesCountQueryResult;
+    "\n  *[_type == \"post\" && slug.current == $slug && language == $lang] [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  language,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n  \"translations\": translations[]->{\n    \"title\": coalesce(title, \"Untitled\"),\n    \"slug\": slug.current,\n    language\n  }\n\n  }\n": PostQueryResult;
+    "\n  *[_type == \"post\" && defined(slug.current) && defined(language)] {\n    \"slug\": slug.current,\n    \"lang\": language\n  }\n": PostSlugsResult;
   }
 }

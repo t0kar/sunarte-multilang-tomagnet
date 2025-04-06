@@ -99,8 +99,6 @@ export default async function Page() {
     }),
   ]);
 
-  console.log('hero post', heroPost, settings);
-
   // Default to Croatian language for the root page
   const defaultLang = 'hr';
 

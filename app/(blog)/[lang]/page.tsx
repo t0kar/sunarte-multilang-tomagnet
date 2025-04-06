@@ -49,12 +49,12 @@ function HeroPost({
 }: Pick<
   Exclude<any, null>,
   'title' | 'coverImage' | 'date' | 'excerpt' | 'author' | 'slug'
-> & { language: string }) {
+> & { language: string | null }) {
   return (
     <article>
       <Link
         className='group mb-8 block md:mb-16'
-        href={`/${language}/posts/${slug}`}
+        href={`/${language || 'en'}/posts/${slug}`}
       >
         <CoverImage image={coverImage} priority />
       </Link>
@@ -62,7 +62,7 @@ function HeroPost({
         <div>
           <h3 className='text-pretty mb-4 text-4xl leading-tight lg:text-6xl'>
             <Link
-              href={`/${language}/posts/${slug}`}
+              href={`/${language || 'en'}/posts/${slug}`}
               className='hover:underline'
             >
               {title}
@@ -85,13 +85,9 @@ function HeroPost({
   );
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { lang: (typeof i18n.languages)[number] };
-}) {
+export default async function Page({ params }: { params: { lang: string } }) {
   // Validate language parameter
-  if (!i18n.languages.includes(params.lang)) {
+  if (!i18n.languages.includes(params.lang as any)) {
     notFound();
   }
 
