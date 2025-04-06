@@ -2,12 +2,16 @@ import { defineQuery } from 'next-sanity';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { type PortableTextBlock } from 'next-sanity';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import * as demo from '@/sanity/lib/demo';
 import { sanityFetch } from '@/sanity/lib/fetch';
-import { postQuery, settingsQuery } from '@/sanity/lib/queries';
+import {
+  postQuery,
+  settingsQuery,
+  moreStoriesCountQuery,
+} from '@/sanity/lib/queries';
 import { resolveOpenGraphImage } from '@/sanity/lib/utils';
 import Avatar from '@/app/(blog)/avatar';
 import CoverImage from '@/app/(blog)/cover-image';
@@ -15,6 +19,7 @@ import DateComponent from '@/app/(blog)/date';
 import MoreStories from '@/app/(blog)/more-stories';
 import CustomPortableText from '@/app/(blog)/portable-text';
 import { i18n } from '@/config/i18n';
+import { getTranslation } from '@/config/translations';
 
 type Props = { params: { slug: string; lang: any } };
 
@@ -64,17 +69,57 @@ export default async function PostPage({ params }: Props) {
     notFound();
   }
 
-  const [post, settings] = await Promise.all([
-    sanityFetch({
-      query: postQuery,
-      params: { slug: params.slug, lang: params.lang },
-    }),
-    sanityFetch({ query: settingsQuery }),
-  ]);
+  // First fetch the post
+  const post = await sanityFetch({
+    query: postQuery,
+    params: { slug: params.slug, lang: params.lang },
+  });
 
   if (!post?._id) {
-    notFound();
+    // If post not found, redirect to the language root path
+    redirect(`/${params.lang}`);
   }
+
+  // Check if this post is a translation of another post
+  // If the requested language doesn't match the post's language, look for a translation
+  if (
+    post.language !== params.lang &&
+    post.translations &&
+    post.translations.length > 0
+  ) {
+    const translation = post.translations.find(
+      (t: any) => t.language === params.lang
+    );
+    if (translation) {
+      // Redirect to the translation
+      redirect(`/${params.lang}/posts/${translation.slug}`);
+    } else {
+      // If no translation found, redirect to the language root path
+      redirect(`/${params.lang}`);
+    }
+  }
+
+  // Get available translations for this post
+  const availableTranslations = post.translations || [];
+
+  // Add the current post to the translations list if it's not already there
+  const allTranslations = [
+    {
+      title: post.title,
+      slug: post.slug,
+      language: post.language,
+    },
+    ...availableTranslations.filter((t: any) => t.language !== post.language),
+  ];
+
+  // Fetch settings and count of more stories
+  const [settings, moreStoriesCount] = await Promise.all([
+    sanityFetch({ query: settingsQuery }),
+    sanityFetch({
+      query: moreStoriesCountQuery,
+      params: { skip: post._id, lang: params.lang },
+    }),
+  ]);
 
   return (
     <div className='container mx-auto px-5'>
@@ -105,6 +150,28 @@ export default async function PostPage({ params }: Props) {
             <div className='mb-4 text-lg'>
               <DateComponent dateString={post.date} />
             </div>
+
+            {/* Display available translations */}
+            {allTranslations.length > 1 && (
+              <div className='mt-4 flex flex-wrap gap-2'>
+                <span className='text-gray-600'>
+                  {getTranslation('availableIn', params.lang)}:
+                </span>
+                {allTranslations.map((translation: any) => (
+                  <Link
+                    key={translation.language}
+                    href={`/${translation.language}/posts/${translation.slug}`}
+                    className={`rounded bg-gray-100 px-2 py-1 text-sm ${
+                      translation.language === params.lang
+                        ? 'bg-blue-100 font-medium text-blue-700'
+                        : 'text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {translation.language.toUpperCase()}
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         {post.content?.length && (
@@ -116,12 +183,16 @@ export default async function PostPage({ params }: Props) {
       </article>
       <aside>
         <hr className='border-accent-2 mb-24 mt-28' />
-        <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
-          Recent Stories
-        </h2>
-        <Suspense>
-          <MoreStories skip={post._id} limit={2} language={params.lang} />
-        </Suspense>
+        {moreStoriesCount > 0 && (
+          <>
+            <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
+              {getTranslation('moreStories', params.lang)}
+            </h2>
+            <Suspense>
+              <MoreStories skip={post._id} limit={2} language={params.lang} />
+            </Suspense>
+          </>
+        )}
       </aside>
     </div>
   );

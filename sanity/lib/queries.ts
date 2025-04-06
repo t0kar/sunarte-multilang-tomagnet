@@ -32,6 +32,10 @@ export const moreStoriesQuery = defineQuery(`
   }
 `);
 
+export const moreStoriesCountQuery = defineQuery(`
+  count(*[_type == "post" && _id != $skip && defined(slug.current) && language == $lang])
+`);
+
 export const postQuery = defineQuery(`
   *[_type == "post" && slug.current == $slug && language == $lang] [0] {
     content,

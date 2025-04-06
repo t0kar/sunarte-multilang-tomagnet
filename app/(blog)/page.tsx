@@ -9,8 +9,13 @@ import Onboarding from './onboarding';
 import PortableText from './portable-text';
 
 import * as demo from '@/sanity/lib/demo';
+import { getTranslation } from '@/config/translations';
 import { sanityFetch } from '@/sanity/lib/fetch';
-import { heroQueryByLang, settingsQuery } from '@/sanity/lib/queries';
+import {
+  heroQueryByLang,
+  settingsQuery,
+  moreStoriesCountQuery,
+} from '@/sanity/lib/queries';
 
 function Intro(props: { title: string | null | undefined; description: any }) {
   const title = props.title || demo.title;
@@ -80,12 +85,24 @@ function HeroPost({
 }
 
 export default async function Page() {
-  const [settings, heroPost] = await Promise.all([
+  // First fetch the hero post
+  const heroPost = await sanityFetch({
+    query: heroQueryByLang,
+  });
+
+  // Then fetch settings and count of more stories
+  const [settings, moreStoriesCount] = await Promise.all([
     sanityFetch({ query: settingsQuery }),
-    sanityFetch({ query: heroQueryByLang }),
+    sanityFetch({
+      query: moreStoriesCountQuery,
+      params: { skip: heroPost?._id || '' },
+    }),
   ]);
 
   console.log('hero post', heroPost, settings);
+
+  // Default to Croatian language for the root page
+  const defaultLang = 'hr';
 
   return (
     <div className='container mx-auto px-5'>
@@ -103,10 +120,10 @@ export default async function Page() {
       ) : (
         <Onboarding />
       )}
-      {heroPost?._id && (
+      {heroPost?._id && moreStoriesCount > 0 && (
         <aside>
           <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
-            More Stories
+            {getTranslation('moreStories', defaultLang)}
           </h2>
           <Suspense>
             <MoreStories skip={heroPost._id} limit={100} />

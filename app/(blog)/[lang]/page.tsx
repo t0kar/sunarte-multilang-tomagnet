@@ -3,9 +3,14 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { i18n } from '@/config/i18n';
+import { getTranslation } from '@/config/translations';
 import * as demo from '@/sanity/lib/demo';
 import { sanityFetch } from '@/sanity/lib/fetch';
-import { heroQueryByLang, settingsQuery } from '@/sanity/lib/queries';
+import {
+  heroQueryByLang,
+  settingsQuery,
+  moreStoriesCountQuery,
+} from '@/sanity/lib/queries';
 import CoverImage from '../cover-image';
 import DateComponent from '../date';
 import Avatar from '../avatar';
@@ -86,9 +91,19 @@ export default async function Page({ params }: { params: { lang: any } }) {
     notFound();
   }
 
-  const [settings, heroPost] = await Promise.all([
+  // First fetch the hero post
+  const heroPost = await sanityFetch({
+    query: heroQueryByLang,
+    params: { lang: params.lang },
+  });
+
+  // Then fetch settings and count of more stories
+  const [settings, moreStoriesCount] = await Promise.all([
     sanityFetch({ query: settingsQuery }),
-    sanityFetch({ query: heroQueryByLang, params: { lang: params.lang } }),
+    sanityFetch({
+      query: moreStoriesCountQuery,
+      params: { skip: heroPost?._id || '', lang: params.lang },
+    }),
   ]);
 
   console.log('hero posts', heroPost);
@@ -109,10 +124,10 @@ export default async function Page({ params }: { params: { lang: any } }) {
       ) : (
         <Onboarding />
       )}
-      {heroPost?._id && (
+      {heroPost?._id && moreStoriesCount > 0 && (
         <aside>
           <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
-            More Stories
+            {getTranslation('moreStories', params.lang)}
           </h2>
           <Suspense>
             <MoreStories

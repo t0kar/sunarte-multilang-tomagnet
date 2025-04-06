@@ -10,7 +10,8 @@
     "presetup": "echo 'about to setup env variables, follow the guide here: https://github.com/vercel/next.js/tree/canary/examples/cms-sanity#using-the-sanity-cli'",
     "setup": "npx sanity@latest init --env .env.local",
     "postsetup": "echo 'create the read token by following the rest of the guide: https://github.com/vercel/next.js/tree/canary/examples/cms-sanity#creating-a-read-token'",
-    "typegen": "sanity schema extract && sanity typegen generate"
+    "typegen": "sanity schema extract && sanity typegen generate",
+    "link-translations": "ts-node scripts/link-translations.ts"
   },
   "dependencies": {
     "@sanity/assist": "^3.0.8",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "eslint": "^9.13.0",
-    "eslint-config-next": "^15.0.0"
+    "eslint-config-next": "^15.0.0",
+    "ts-node": "^10.9.2"
   }
 }
