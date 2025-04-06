@@ -68,6 +68,18 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Redirect = {
+  _id: string;
+  _type: "redirect";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  source?: string;
+  destination?: string;
+  permanent?: boolean;
+  active?: boolean;
+};
+
 export type Post = {
   _id: string;
   _type: "post";
@@ -100,6 +112,19 @@ export type Post = {
     }>;
     level?: number;
     _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
     _key: string;
   }>;
   excerpt?: string;
@@ -387,7 +412,7 @@ export type SanityAssistSchemaTypeField = {
   } & SanityAssistInstruction>;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Post | Author | Slug | Settings | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Redirect | Post | Author | Slug | Settings | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | SanityAssistInstructionTask | SanityAssistTaskStatus | SanityAssistSchemaTypeAnnotations | SanityAssistOutputType | SanityAssistOutputField | SanityAssistInstructionContext | AssistInstructionContext | SanityAssistInstructionUserInput | SanityAssistInstructionPrompt | SanityAssistInstructionFieldRef | SanityAssistInstruction | SanityAssistSchemaTypeField;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./app/(blog)/[lang]/posts/[slug]/page.tsx
 // Variable: postSlugsForStaticParams
@@ -476,6 +501,19 @@ export type HeroQueryByLangResult = {
     }>;
     level?: number;
     _type: "block";
+    _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
     _key: string;
   }> | null;
   _id: string;
@@ -584,6 +622,19 @@ export type PostQueryResult = {
     level?: number;
     _type: "block";
     _key: string;
+  } | {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    caption?: string;
+    _type: "image";
+    _key: string;
   }> | null;
   _id: string;
   status: "draft" | "published";
@@ -631,6 +682,13 @@ export type PostSlugsResult = Array<{
   slug: string | null;
   lang: "de" | "en" | "fr" | "hr" | null;
 }>;
+// Variable: redirectsQuery
+// Query: *[_type == "redirect" && active == true] {    "source": source,    "destination": destination,    "permanent": permanent  }
+export type RedirectsQueryResult = Array<{
+  source: string | null;
+  destination: string | null;
+  permanent: boolean | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -643,5 +701,6 @@ declare module "@sanity/client" {
     "\n  count(*[_type == \"post\" && _id != $skip && defined(slug.current) && language == $lang])\n": MoreStoriesCountQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug && language == $lang] [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n  \"title\": coalesce(title, \"Untitled\"),\n  \"slug\": slug.current,\n  language,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n  \"translations\": translations[]->{\n    \"title\": coalesce(title, \"Untitled\"),\n    \"slug\": slug.current,\n    language\n  }\n\n  }\n": PostQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current) && defined(language)] {\n    \"slug\": slug.current,\n    \"lang\": language\n  }\n": PostSlugsResult;
+    "\n  *[_type == \"redirect\" && active == true] {\n    \"source\": source,\n    \"destination\": destination,\n    \"permanent\": permanent\n  }\n": RedirectsQueryResult;
   }
 }

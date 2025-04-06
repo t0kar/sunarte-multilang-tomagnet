@@ -13,17 +13,23 @@ interface Redirect {
   permanent: boolean;
 }
 
+// List of paths to exclude from redirects
+const excludedPaths = ['/studio'];
+
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   // Get the pathname from the request
   const pathname = request.nextUrl.pathname;
 
-  // Skip middleware for static files and API routes
+  // Skip middleware for static files, API routes, and excluded paths
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/static') ||
-    pathname.includes('.')
+    pathname.includes('.') ||
+    excludedPaths.some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`)
+    )
   ) {
     return NextResponse.next();
   }
