@@ -183,7 +183,7 @@ export default async function PostPage({ params }: any) {
         <hr className='border-accent-2 mb-8 mt-16' />
         {moreStoriesCount > 0 && (
           <>
-            <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-6xl'>
+            <h2 className='mb-8 text-5xl font-bold leading-tight tracking-tighter md:text-5xl'>
               {getTranslation('moreStories', params.lang)}
             </h2>
             <Suspense>

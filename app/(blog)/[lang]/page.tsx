@@ -122,7 +122,7 @@ export default async function Page(props: any) {
       )}
       {heroPost?._id && moreStoriesCount > 0 && (
         <aside>
-          <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
+          <h2 className='mb-8 text-5xl font-bold leading-tight tracking-tighter md:text-5xl'>
             {getTranslation('moreStories', params?.lang)}
           </h2>
           <Suspense>

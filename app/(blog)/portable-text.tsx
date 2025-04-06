@@ -46,14 +46,15 @@ export default function CustomPortableText({
         }
 
         return (
-          <figure className='my-6'>
-            <div className='relative aspect-video overflow-hidden rounded-lg'>
+          <figure className='my-6 flex justify-center'>
+            <div className='relative w-3/4 max-w-3xl overflow-hidden rounded-lg'>
               <Image
                 src={imageUrl}
-                alt={value.alt || ''}
-                fill
-                className='object-cover'
-                sizes='(max-width: 800px) 100vw, 800px'
+                alt={value.alt ?? ''}
+                width={800}
+                height={600}
+                className='w-full h-auto'
+                sizes='(max-width: 800px) 75vw, 600px'
               />
             </div>
             {value.caption && (

@@ -30,7 +30,7 @@ export default async function MoreStories(params: any) {
             >
               <CoverImage image={coverImage} priority={false} />
             </Link>
-            <h3 className='text-balance mb-3 text-3xl leading-snug'>
+            <h3 className='text-balance mb-3 text-2xl leading-snug'>
               <Link
                 href={`/${language}/posts/${slug}`}
                 className='hover:underline'
@@ -42,7 +42,7 @@ export default async function MoreStories(params: any) {
               <DateComponent dateString={post.date} />
             </div>
             {excerpt && (
-              <p className='text-pretty mb-4 text-lg leading-relaxed'>
+              <p className='text-pretty mb-4 text-md leading-relaxed'>
                 {excerpt}
               </p>
             )}
