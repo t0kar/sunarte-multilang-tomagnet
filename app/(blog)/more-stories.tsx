@@ -7,14 +7,14 @@ import DateComponent from './date';
 import { sanityFetch } from '@/sanity/lib/fetch';
 import { moreStoriesQuery } from '@/sanity/lib/queries';
 
-export default async function MoreStories(params: {
-  skip: string;
-  limit: number;
-  language?: string;
-}) {
+export default async function MoreStories(params: any) {
   const data = await sanityFetch({
     query: moreStoriesQuery,
-    params: { skip: params.skip, limit: params.limit, lang: params.language },
+    params: {
+      skip: params.skip,
+      limit: params.limit,
+      lang: params.language ?? 'hr',
+    },
   });
 
   return (

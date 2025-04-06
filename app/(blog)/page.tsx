@@ -17,7 +17,7 @@ import {
   moreStoriesCountQuery,
 } from '@/sanity/lib/queries';
 
-function Intro(props: { title: string | null | undefined; description: any }) {
+function Intro(props: any) {
   const title = props.title || demo.title;
   const description = props.description?.length
     ? props.description
@@ -45,10 +45,7 @@ function HeroPost({
   date,
   author,
   language,
-}: Pick<
-  Exclude<any, null>,
-  'title' | 'coverImage' | 'date' | 'excerpt' | 'author' | 'slug'
-> & { language: string }) {
+}: any) {
   return (
     <article>
       <Link
@@ -85,9 +82,13 @@ function HeroPost({
 }
 
 export default async function Page() {
+  // Default to Croatian language for the root page
+  const defaultLang = 'hr';
+
   // First fetch the hero post
   const heroPost = await sanityFetch({
     query: heroQueryByLang,
+    params: { lang: defaultLang ?? 'hr' },
   });
 
   // Then fetch settings and count of more stories
@@ -95,12 +96,9 @@ export default async function Page() {
     sanityFetch({ query: settingsQuery }),
     sanityFetch({
       query: moreStoriesCountQuery,
-      params: { skip: heroPost?._id || '' },
+      params: { skip: heroPost?._id ?? '', lang: defaultLang ?? 'hr' },
     }),
   ]);
-
-  // Default to Croatian language for the root page
-  const defaultLang = 'hr';
 
   return (
     <div className='container mx-auto px-5'>

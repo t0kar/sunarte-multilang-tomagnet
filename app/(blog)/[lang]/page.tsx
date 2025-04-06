@@ -18,10 +18,10 @@ import Onboarding from '../onboarding';
 import MoreStories from '../more-stories';
 import CustomPortableText from '../portable-text';
 
-function Intro(props: { title: string | null | undefined; description: any }) {
-  const title = props.title || demo.title;
-  const description = props.description?.length
-    ? props.description
+function Intro(props: any) {
+  const title = props?.title || demo.title;
+  const description = props?.description?.length
+    ? props?.description
     : demo.description;
   return (
     <section className='mt-16 mb-16 flex flex-col items-center lg:mb-12 lg:flex-row lg:justify-between'>
@@ -46,15 +46,12 @@ function HeroPost({
   date,
   author,
   language,
-}: Pick<
-  Exclude<any, null>,
-  'title' | 'coverImage' | 'date' | 'excerpt' | 'author' | 'slug'
-> & { language: string | null }) {
+}: any) {
   return (
     <article>
       <Link
         className='group mb-8 block md:mb-16'
-        href={`/${language || 'en'}/posts/${slug}`}
+        href={`/${language}/posts/${slug}`}
       >
         <CoverImage image={coverImage} priority />
       </Link>
@@ -62,7 +59,7 @@ function HeroPost({
         <div>
           <h3 className='text-pretty mb-4 text-4xl leading-tight lg:text-6xl'>
             <Link
-              href={`/${language || 'en'}/posts/${slug}`}
+              href={`/${language}/posts/${slug}`}
               className='hover:underline'
             >
               {title}
@@ -85,9 +82,10 @@ function HeroPost({
   );
 }
 
-export default async function Page({ params }: { params: { lang: string } }) {
+export default async function Page(props: any) {
+  const { params } = props;
   // Validate language parameter
-  if (!i18n.languages.includes(params.lang as any)) {
+  if (!i18n.languages.includes(params.lang)) {
     notFound();
   }
 
@@ -125,13 +123,13 @@ export default async function Page({ params }: { params: { lang: string } }) {
       {heroPost?._id && moreStoriesCount > 0 && (
         <aside>
           <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
-            {getTranslation('moreStories', params.lang)}
+            {getTranslation('moreStories', params?.lang)}
           </h2>
           <Suspense>
             <MoreStories
               skip={heroPost._id}
               limit={100}
-              language={params.lang}
+              language={params?.lang}
             />
           </Suspense>
         </aside>

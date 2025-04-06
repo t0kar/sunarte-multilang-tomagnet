@@ -21,8 +21,6 @@ import CustomPortableText from '@/app/(blog)/portable-text';
 import { i18n } from '@/config/i18n';
 import { getTranslation } from '@/config/translations';
 
-type Props = { params: { slug: string; lang: string } };
-
 const postSlugsForStaticParams = defineQuery(
   `*[_type == "post" && defined(slug.current) && defined(language)]{
     "slug": slug.current,
@@ -41,7 +39,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params }: Props,
+  { params }: any,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const post = await sanityFetch({
@@ -63,9 +61,9 @@ export async function generateMetadata(
   } satisfies Metadata;
 }
 
-export default async function PostPage({ params }: Props) {
+export default async function PostPage({ params }: any) {
   // Validate language parameter
-  if (!i18n.languages.includes(params.lang as any)) {
+  if (!i18n.languages.includes(params.lang)) {
     notFound();
   }
 
