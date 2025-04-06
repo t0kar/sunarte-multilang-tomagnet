@@ -123,7 +123,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <div className='container mx-auto px-5'>
-      <h2 className='mb-16 mt-10 text-2xl font-bold leading-tight tracking-tight md:text-4xl md:tracking-tighter'>
+      <h2 className='mb-10 mt-16 text-2xl font-bold leading-tight tracking-tight md:text-4xl md:tracking-tighter'>
         <Link href={`/${params.lang}`} className='hover:underline'>
           {settings?.title || demo.title}
         </Link>
@@ -182,10 +182,10 @@ export default async function PostPage({ params }: Props) {
         )}
       </article>
       <aside>
-        <hr className='border-accent-2 mb-24 mt-28' />
+        <hr className='border-accent-2 mb-8 mt-16' />
         {moreStoriesCount > 0 && (
           <>
-            <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-7xl'>
+            <h2 className='mb-8 text-6xl font-bold leading-tight tracking-tighter md:text-6xl'>
               {getTranslation('moreStories', params.lang)}
             </h2>
             <Suspense>
