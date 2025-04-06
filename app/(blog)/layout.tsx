@@ -2,16 +2,11 @@ import '../globals.css';
 
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
-import {
-  VisualEditing,
-  toPlainText,
-  type PortableTextBlock,
-} from 'next-sanity';
+import { toPlainText } from 'next-sanity';
 import { Inter } from 'next/font/google';
 import { draftMode } from 'next/headers';
 
 import AlertBanner from './alert-banner';
-import PortableText from './portable-text';
 
 import * as demo from '@/sanity/lib/demo';
 import { sanityFetch } from '@/sanity/lib/fetch';
@@ -59,6 +54,8 @@ export default async function RootLayout({
   const data = await sanityFetch({ query: settingsQuery });
   const footer = data?.footer || [];
   const { isEnabled: isDraftMode } = await draftMode();
+
+  console.log('footer', data);
 
   return (
     <html lang='en' className={`${inter.variable} bg-white text-black`}>
