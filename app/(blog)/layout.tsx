@@ -55,11 +55,9 @@ export default async function RootLayout({
   const footer = data?.footer || [];
   const { isEnabled: isDraftMode } = await draftMode();
 
-  console.log('footer', data);
-
   return (
     <html lang='en' className={`${inter.variable} bg-white text-black`}>
-      <body>
+      <body suppressHydrationWarning>
         <section className='min-h-screen'>
           {isDraftMode && <AlertBanner />}
           <SimpleLanguageSelector />
@@ -67,12 +65,12 @@ export default async function RootLayout({
           <main>{children}</main>
           <footer className='bg-accent-1 border-accent-2 border-t'>
             <div className='container mx-auto px-5'>
-              <div className='flex flex-col items-center py-4 text-center'>
+              <div className='flex flex-col items-center py-8 text-center'>
                 <p className='text-sm text-gray-600'>
                   Powered by{' '}
                   <a
                     href='https://sunarte.hr'
-                    className='font-semibold text-blue-600 hover:underline'
+                    className='font-medium text-blue-600 hover:underline'
                   >
                     sunarte.hr
                   </a>

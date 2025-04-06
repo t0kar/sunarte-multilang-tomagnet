@@ -85,7 +85,7 @@ function HeroPost({
   );
 }
 
-export default async function Page({ params }: { params: { lang: any } }) {
+export default async function Page({ params }: any) {
   // Validate language parameter
   if (!i18n.languages.includes(params.lang)) {
     notFound();
@@ -105,8 +105,6 @@ export default async function Page({ params }: { params: { lang: any } }) {
       params: { skip: heroPost?._id || '', lang: params.lang },
     }),
   ]);
-
-  console.log('hero posts', heroPost);
 
   return (
     <div className='container mx-auto px-5'>

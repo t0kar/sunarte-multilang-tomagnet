@@ -19,7 +19,7 @@ export default function ClientBody({
   footer,
 }: ClientBodyProps) {
   return (
-    <body>
+    <body suppressHydrationWarning>
       <section className='min-h-screen'>
         {isDraftMode && <AlertBanner />}
         <ClientLanguageSelector />
