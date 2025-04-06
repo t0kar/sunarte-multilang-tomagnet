@@ -106,7 +106,29 @@ export default defineType({
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [
+        { type: 'block' },
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+              description: 'Important for SEO and accessibility.',
+            },
+            {
+              name: 'caption',
+              type: 'string',
+              title: 'Caption',
+              description: 'Caption displayed below the image',
+            },
+          ],
+        },
+      ],
     }),
     defineField({ name: 'excerpt', title: 'Excerpt', type: 'text' }),
     defineField({
